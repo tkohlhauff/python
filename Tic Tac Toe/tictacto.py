@@ -19,7 +19,7 @@ def gameMechanics(space):
     gameOvah=False
     while gameOvah==False:
         selection=int(input("Enter the number of the space you would like to mark: "))
-        if selection==1:
+        if selection==1 and space[selection-1]=='     ':
             if turnX==True:
                 space[0]=x
                 redrawBoard(space)
@@ -28,7 +28,7 @@ def gameMechanics(space):
                 space[0]=o
                 redrawBoard(space)
                 turnX=True
-        if selection==2:
+        if selection==2 and space[selection-1]=='     ':
             if turnX==True:
                 space[1]=x
                 redrawBoard(space)
@@ -37,7 +37,7 @@ def gameMechanics(space):
                 space[1]=o
                 redrawBoard(space)
                 turnX=True
-        if selection==3:
+        if selection==3 and space[selection-1]=='     ':
             if turnX==True:
                 space[2]=x
                 redrawBoard(space)
@@ -46,7 +46,7 @@ def gameMechanics(space):
                 space[2]=o
                 redrawBoard(space)
                 turnX=True
-        if selection==4:
+        if selection==4 and space[selection-1]=='     ':
             if turnX==True:
                 space[3]=x
                 redrawBoard(space)
@@ -55,7 +55,7 @@ def gameMechanics(space):
                 space[3]=o
                 redrawBoard(space)
                 turnX=True
-        if selection==5:
+        if selection==5 and space[selection-1]=='     ':
             if turnX==True:
                 space[4]=x
                 redrawBoard(space)
@@ -64,7 +64,7 @@ def gameMechanics(space):
                 space[4]=o
                 redrawBoard(space)
                 turnX=True
-        if selection==6:
+        if selection==6 and space[selection-1]=='     ':
             if turnX==True:
                 space[5]=x
                 redrawBoard(space)
@@ -73,7 +73,7 @@ def gameMechanics(space):
                 space[5]=o
                 redrawBoard(space)
                 turnX=True
-        if selection==7:
+        if selection==7 and space[selection-1]=='     ':
             if turnX==True:
                 space[6]=x
                 redrawBoard(space)
@@ -82,7 +82,7 @@ def gameMechanics(space):
                 space[6]=o
                 redrawBoard(space)
                 turnX=True
-        if selection==8:
+        if selection==8 and space[selection-1]=='     ':
             if turnX==True:
                 space[7]=x
                 redrawBoard(space)
@@ -91,7 +91,7 @@ def gameMechanics(space):
                 space[7]=o
                 redrawBoard(space)
                 turnX=True
-        if selection==9:
+        if selection==9 and space[selection-1]=='     ':
             if turnX==True:
                 space[8]=x
                 redrawBoard(space)
@@ -101,6 +101,13 @@ def gameMechanics(space):
                 redrawBoard(space)
                 turnX=True
         gameOvah=checkWin(space)
+        if gameOvah == True:
+            selection=input("Would you like to play again?: ")
+            if selection in ["yes","y","Yes","Y"]:
+                freshBoard()
+            else:
+                print("Thank you for playing!")
+        
 def redrawBoard(space):
     clear()
     print(space[0],"|",space[1],"|",space[2])
@@ -111,26 +118,30 @@ def redrawBoard(space):
 def checkWin(space):
     if space[0] =="  X  " or space[0] == "  O  ":
         if space[0] in space[3] and space[0] in space[6]:
+            print("Congrats",space[0],"you won!")
             return True
         elif space[0] in space[4] and space[0] in space[8]:
+            print("Congrats",space[0],"you won!")
             return True
         elif space[0] in space[1] and space[0] in space[2]:
+            print("Congrats",space[0],"you won!")
             return True
     if space[1]=="  X  " or space[1]=="  O  ":
         if space[1] in space[4] and space[1] in space[7]:
+            print("Congrats",space[1],"you won!")
             return True
     if space[2] =="  X  " or space[2] == "  O  ":
         if space[2] in space[5] and space[2] in space[8]:
+            print("Congrats",space[2],"you won!")
             return True
         elif space[2] in space[4] and space[2] in space[6]:
+            print("Congrats",space[2],"you won!")
             return True
     if space[3]=="  X  " or space[3]=="  O  ":
         if space[3] in space[4] and space[3] in space[5]:
-            print("in here")
+            print("Congrats",space[3],"you won!")
             return True
-    else:
-        print("working")
-        return False
+    return False
         
 def clear():
     import os
