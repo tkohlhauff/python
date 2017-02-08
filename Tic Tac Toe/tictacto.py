@@ -124,7 +124,7 @@ def checkWin(space):
             return True
         elif space[2] in space[4] and space[2] in space[6]:
             return True
-    elif space[3]=="  X  " or space[3]=="  O  ":
+    if space[3]=="  X  " or space[3]=="  O  ":
         if space[3] in space[4] and space[3] in space[5]:
             print("in here")
             return True
