@@ -19,87 +19,14 @@ def gameMechanics(space):
     gameOvah=False
     while gameOvah==False:
         selection=int(input("Enter the number of the space you would like to mark: "))
-        if selection==1 and space[selection-1]=='     ':
-            if turnX==True:
-                space[0]=x
-                redrawBoard(space)
-                turnX=False
-            else:
-                space[0]=o
-                redrawBoard(space)
-                turnX=True
-        if selection==2 and space[selection-1]=='     ':
-            if turnX==True:
-                space[1]=x
-                redrawBoard(space)
-                turnX=False
-            else:
-                space[1]=o
-                redrawBoard(space)
-                turnX=True
-        if selection==3 and space[selection-1]=='     ':
-            if turnX==True:
-                space[2]=x
-                redrawBoard(space)
-                turnX=False
-            else:
-                space[2]=o
-                redrawBoard(space)
-                turnX=True
-        if selection==4 and space[selection-1]=='     ':
-            if turnX==True:
-                space[3]=x
-                redrawBoard(space)
-                turnX=False
-            else:
-                space[3]=o
-                redrawBoard(space)
-                turnX=True
-        if selection==5 and space[selection-1]=='     ':
-            if turnX==True:
-                space[4]=x
-                redrawBoard(space)
-                turnX=False
-            else:
-                space[4]=o
-                redrawBoard(space)
-                turnX=True
-        if selection==6 and space[selection-1]=='     ':
-            if turnX==True:
-                space[5]=x
-                redrawBoard(space)
-                turnX=False
-            else:
-                space[5]=o
-                redrawBoard(space)
-                turnX=True
-        if selection==7 and space[selection-1]=='     ':
-            if turnX==True:
-                space[6]=x
-                redrawBoard(space)
-                turnX=False
-            else:
-                space[6]=o
-                redrawBoard(space)
-                turnX=True
-        if selection==8 and space[selection-1]=='     ':
-            if turnX==True:
-                space[7]=x
-                redrawBoard(space)
-                turnX=False
-            else:
-                space[7]=o
-                redrawBoard(space)
-                turnX=True
-        if selection==9 and space[selection-1]=='     ':
-            if turnX==True:
-                space[8]=x
-                redrawBoard(space)
-                turnX=False
-            else:
-                space[8]=o
-                redrawBoard(space)
-                turnX=True
+        if turnX==True and space[selection-1]=='     ':
+            space[selection-1]=x
+            redrawBoard(space)
+            turnX=False
+        elif space[selection-1]=='     ':
+            space[selection-1]=o
+            redrawBoard(space)
+            turnX=True
         gameOvah=checkWin(space)
         if gameOvah == True:
             selection=input("Would you like to play again?: ")
