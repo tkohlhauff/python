@@ -1,6 +1,8 @@
 from msvcrt import getch
+import time
 initPos=54
 loss=False
+pos='down'
 def main():
     global initPos
     space=['   ']
@@ -15,6 +17,7 @@ def main():
     board(space)
 
 def board(space):
+    global pos
     clear()
     z=0
     for x in range(10):
@@ -27,46 +30,54 @@ def move(space):
     while loss==False:
         key = ord(getch())
         if key == 119 or key == 115: #up(w)is 119, down(s) is 115
-            moveVert(space,key)
+            moveVert(key,space)
         elif key == 97 or key == 100: #left(a) is 97, right(d) is 100
-            moveHor(space,key)
-    print()
-    print('GAME OVER')
+            moveHor(key,space)
+        
 def moveVert(x,y):
     global initPos
-    if y == 119:
+    global pos
+    if x == 119:
         up=True
-    elif y == 115:
+    elif x == 115:
         up=False
     if up==True:
-        x[initPos]='   '
-        initPos-=10
-        x[initPos]=' x '
-        checkLoss(initPos)
-    if up==False:
-        x[initPos]='   '
-        initPos+=10
-        x[initPos]=' x '
-        checkLoss(initPos)
-    board(x)
+        pos='up'
+    elif up==False:
+        pos='down'
+    movement(y,pos)
 
 def moveHor(x,y):
-    global initPos
-    if y == 97:
+    global pos
+    if x == 97:
         left=True
-    elif y == 100:
+    elif x == 100:
         left=False
     if left==True:
-        x[initPos]='   '
+        pos='left'
+    elif left==False:
+        pos='right'
+        
+    movement(y,pos)
+
+def movement(space,pos):
+    global initPos
+    space[initPos]='   '
+    if pos=='left':
+        time.sleep(1)
         initPos-=1
-        x[initPos]=' x '
-        checkLoss(initPos)
-    if left==False:
-        x[initPos]='   '
+    elif pos=='right':
+        time.sleep(1)
         initPos+=1
-        x[initPos]=' x '
-        checkLoss(initPos)
-    board(x)
+    elif pos=='up':
+        time.sleep(1)
+        initPos-=10
+    elif pos=='down':
+        time.sleep(1)
+        initPos+=10
+    space[initPos]=' x '
+    checkLoss(initPos)
+    board(space)
 def checkLoss(x):
     global loss
     if x<11:
