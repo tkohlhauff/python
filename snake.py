@@ -1,9 +1,11 @@
 from msvcrt import getch
+initPos=54
 def main():
+    global initPos
     space=['   ']
     space*=101
     print("Welcome to Snake")
-    space[54]=' x '
+    space[initPos]=' x '
     for x in range(10):
         space[x]=' - '
         space[x*10]=' - '
@@ -27,17 +29,20 @@ def move(space):
             moveVert(space,key)
         elif key == 97 or key == 100: #left(a) is 97, right(d) is 100
             moveHor(space,key)
+        elif key == 27:
+            break
 def moveVert(x,y):
+    global initPos
     print('here')
-    initSpace=54
     if y == 119:
-        up=False
-    elif y == 115:
         up=True
+    elif y == 115:
+        up=False
     if up==True:
         print('here')
-        initSpace+=10
-        x[initSpace]=' x '
+        x[initPos]='   '
+        initPos-=10
+        x[initPos]=' x '
     board(x)    
         
 
