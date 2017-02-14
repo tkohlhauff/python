@@ -23,19 +23,19 @@ def board(space):
 def move(space):
     while True:
         key = ord(getch())
-        if key == 224:
-            key== ord(getch())
-            if key == 80 or key == 72: #down is 80, up is 72
-                moveVert(space,key)
-            elif key == 75 or key == 77: #left is 75, right is 77
-                moveHor(space,key)
+        if key == 119 or key == 115: #up(w)is 119, down(s) is 115
+            moveVert(space,key)
+        elif key == 97 or key == 100: #left(a) is 97, right(d) is 100
+            moveHor(space,key)
 def moveVert(x,y):
+    print('here')
     initSpace=54
-    if y == 80:
+    if y == 119:
         up=False
-    elif y == 72:
+    elif y == 115:
         up=True
     if up==True:
+        print('here')
         initSpace+=10
         x[initSpace]=' x '
     board(x)    
