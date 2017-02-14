@@ -15,6 +15,7 @@ def main():
         space[x*10+9]=' - '
         space[100-x]=' - '
     board(space)
+    move(space)
 
 def board(space):
     global pos
@@ -25,15 +26,14 @@ def board(space):
         for y in range(10):
             print(space[z], end='')
             z+=1
-    move(space)
 def move(space):
     while loss==False:
+        movement(space,pos)
         key = ord(getch())
         if key == 119 or key == 115: #up(w)is 119, down(s) is 115
             moveVert(key,space)
         elif key == 97 or key == 100: #left(a) is 97, right(d) is 100
             moveHor(key,space)
-        
 def moveVert(x,y):
     global initPos
     global pos
@@ -80,9 +80,7 @@ def movement(space,pos):
     board(space)
 def checkLoss(x):
     global loss
-    if x<11:
-        loss=True
-    elif x>89:
+    if x<11 or x>89:
         loss=True
     
         
@@ -96,7 +94,3 @@ def clear():
 
     
 main()
-
-    
-    
-    
