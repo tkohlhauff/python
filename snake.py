@@ -1,5 +1,6 @@
 from msvcrt import getch
 initPos=54
+loss=False
 def main():
     global initPos
     space=['   ']
@@ -23,27 +24,56 @@ def board(space):
             z+=1
     move(space)
 def move(space):
-    while True:
+    while loss==False:
         key = ord(getch())
         if key == 119 or key == 115: #up(w)is 119, down(s) is 115
             moveVert(space,key)
         elif key == 97 or key == 100: #left(a) is 97, right(d) is 100
             moveHor(space,key)
-        elif key == 27:
-            break
+    print()
+    print('GAME OVER')
 def moveVert(x,y):
     global initPos
-    print('here')
     if y == 119:
         up=True
     elif y == 115:
         up=False
     if up==True:
-        print('here')
         x[initPos]='   '
         initPos-=10
         x[initPos]=' x '
-    board(x)    
+        checkLoss(initPos)
+    if up==False:
+        x[initPos]='   '
+        initPos+=10
+        x[initPos]=' x '
+        checkLoss(initPos)
+    board(x)
+
+def moveHor(x,y):
+    global initPos
+    if y == 97:
+        left=True
+    elif y == 100:
+        left=False
+    if left==True:
+        x[initPos]='   '
+        initPos-=1
+        x[initPos]=' x '
+        checkLoss(initPos)
+    if left==False:
+        x[initPos]='   '
+        initPos+=1
+        x[initPos]=' x '
+        checkLoss(initPos)
+    board(x)
+def checkLoss(x):
+    global loss
+    if x<11:
+        loss=True
+    elif x>89:
+        loss=True
+    
         
 
 def clear():
