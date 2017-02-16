@@ -5,6 +5,7 @@ loss=False
 pos='down'
 def main():
     global initPos
+    global pos
     space=['   ']
     space*=101
     print("Welcome to Snake")
@@ -14,11 +15,15 @@ def main():
         space[x*10]=' - '
         space[x*10+9]=' - '
         space[100-x]=' - '
-    board(space)
-    move(space)
+    z=0
+    for x in range(10):
+        print()
+        for y in range(10):
+            print(space[z], end='')
+            z+=1
+    movement(space,pos)
 
-def board(space):
-    global pos
+def reDraw(space):
     clear()
     z=0
     for x in range(10):
@@ -26,16 +31,12 @@ def board(space):
         for y in range(10):
             print(space[z], end='')
             z+=1
-def move(space):
-    while loss==False:
-        movement(space,pos)
-        key = ord(getch())
-        if key == 119 or key == 115: #up(w)is 119, down(s) is 115
-            moveVert(key,space)
-        elif key == 97 or key == 100: #left(a) is 97, right(d) is 100
-            moveHor(key,space)
-def moveVert(x,y):
-    global initPos
+def checkMove(key):
+    if key == 119 or key == 115: #up(w)is 119, down(s) is 115
+        moveVert(key)
+    elif key == 97 or key == 100: #left(a) is 97, right(d) is 100
+        moveHor(key)
+def moveVert(x):
     global pos
     if x == 119:
         up=True
@@ -45,9 +46,8 @@ def moveVert(x,y):
         pos='up'
     elif up==False:
         pos='down'
-    movement(y,pos)
 
-def moveHor(x,y):
+def moveHor(x):
     global pos
     if x == 97:
         left=True
@@ -57,27 +57,43 @@ def moveHor(x,y):
         pos='left'
     elif left==False:
         pos='right'
-        
-    movement(y,pos)
 
 def movement(space,pos):
     global initPos
-    space[initPos]='   '
-    if pos=='left':
+    while pos=='left' and loss==False:
+        key = ord(getch())
         time.sleep(1)
+        space[initPos]='   '
         initPos-=1
-    elif pos=='right':
+        space[initPos]=' x '
+        checkLoss(initPos)
+        reDraw(space)
+    while pos=='right' and loss==False:
+        key = ord(getch())
         time.sleep(1)
+        space[initPos]='   '
         initPos+=1
-    elif pos=='up':
+        space[initPos]=' x '
+        checkLoss(initPos)
+        reDraw(space)
+    while pos=='up' and loss==False:
+        key = ord(getch())
+        checkMove(key)
         time.sleep(1)
+        space[initPos]='   '
         initPos-=10
-    elif pos=='down':
+        space[initPos]=' x '
+        checkLoss(initPos)
+        reDraw(space)
+    while pos=='down' and loss==False:
+        key = ord(getch())
         time.sleep(1)
+        space[initPos]='   '
         initPos+=10
-    space[initPos]=' x '
-    checkLoss(initPos)
-    board(space)
+        space[initPos]=' x '
+        checkMove(key)
+        checkLoss(initPos)
+        reDraw(space)
 def checkLoss(x):
     global loss
     if x<11 or x>89:
