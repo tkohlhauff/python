@@ -17,7 +17,7 @@ rect=pygame.Rect(500,500,HEIGHT,HEIGHT)
 move='down'
 collected=1
 last=[[currX,currY]]
-
+fps=15
 def main():
     global move
     done = False
@@ -45,13 +45,14 @@ def main():
         #updates screen
         pygame.display.flip()
         #fps
-        clock.tick_busy_loop(15)
+
+        clock.tick_busy_loop(fps)
     pygame.quit()
 
 
         
 def chkMove(move):
-    global currY,currX,collected,rect, collect
+    global currY,currX,collected,rect,collect,fps
     for x in last:
         rect=pygame.draw.rect(screen,WHITE,(x[0],x[1],HEIGHT,HEIGHT),0)
     ranBlock=pygame.draw.rect(screen,WHITE,(ranx,rany,HEIGHT,HEIGHT),0)
@@ -74,6 +75,8 @@ def chkMove(move):
     if rect.colliderect(ranBlock):
         collect=False
         collected+=1
+        if collected%3==0:
+            fps+=3
     if -15>currX or currX>1015 or -15>currY or currY>1015:
         pygame.quit()
     for x in last[:-1]:
