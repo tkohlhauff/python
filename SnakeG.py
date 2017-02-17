@@ -15,7 +15,7 @@ screen=pygame.display.set_mode(size)
 pygame.display.set_caption("Snake")
 rect=pygame.Rect(500,500,HEIGHT,HEIGHT)
 move='down'
-collected=0
+collected=1
 last=[[currX,currY]]
 
 def main():
@@ -74,8 +74,11 @@ def chkMove(move):
     if rect.colliderect(ranBlock):
         collect=False
         collected+=1
-    if -10>currX or currX>1020 or -10>currY or currY>1020:
+    if -15>currX or currX>1015 or -15>currY or currY>1015:
         pygame.quit()
+    for x in last[:-1]:
+        if x==lastXY:
+            pygame.quit()
 def ranBlock():
     global ranx, rany, collect
     collect=True
