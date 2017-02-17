@@ -8,16 +8,16 @@ BLACK =(   0,   0,   0)
 HEIGHT=15
 ranx=0
 rany=0
-currX=250
-currY=250
-lastx=[currX]
-lasty=[currY]
-size=(500,500)
+currX=500
+currY=500
+size=(1000,1000)
 screen=pygame.display.set_mode(size)
 pygame.display.set_caption("Snake")
-rect=pygame.Rect(250,250,HEIGHT,HEIGHT)
+rect=pygame.Rect(500,500,HEIGHT,HEIGHT)
 move='down'
-collected=1
+collected=0
+last=[[currX,currY]]
+
 def main():
     global move
     done = False
@@ -39,52 +39,42 @@ def main():
                 done=True
         #draw
         screen.fill(BLACK)
-        chkMove()
         if not collect:
             ranBlock()
-        block()
+        chkMove(move)
         #updates screen
         pygame.display.flip()
         #fps
-        clock.tick(8/collected)
+        clock.tick_busy_loop(15)
     pygame.quit()
-def block():
-    global rect, collect, collected, currY, currX,lastx,lasty
-    for x in range(collected):
-        if move=='left':
-            pygame.draw.rect(screen,WHITE,(lastx[x],lasty[x],HEIGHT,HEIGHT),0)
-        elif move=='right':
-            pygame.draw.rect(screen,WHITE,(lastx[x],lasty[x],HEIGHT,HEIGHT),0)
-        elif move=='up':
-            pygame.draw.rect(screen,WHITE,(lastx[x],lasty[x],HEIGHT,HEIGHT),0)
-        elif move=='down':
-            pygame.draw.rect(screen,WHITE,(lastx[x],lasty[x],HEIGHT,HEIGHT),0)
+
+
+        
+def chkMove(move):
+    global currY,currX,collected,rect, collect
+    for x in last:
+        rect=pygame.draw.rect(screen,WHITE,(x[0],x[1],HEIGHT,HEIGHT),0)
     ranBlock=pygame.draw.rect(screen,WHITE,(ranx,rany,HEIGHT,HEIGHT),0)
+    if move=='up':
+        currY-=HEIGHT
+    elif move=='down':
+        currY+=HEIGHT
+    elif move=='left':
+        currX-=HEIGHT
+    elif move=='right':
+        currX+=HEIGHT
+    lastXY=[]
+    lastXY.append(currX)
+    lastXY.append(currY)
+    lastXY.reverse()
+    lastXY.reverse()
+    last.append(lastXY)
+    if len(last)>collected:
+        del last[0]
     if rect.colliderect(ranBlock):
-        lastx.append(currX)
-        lasty.append(currY)
-        collected+=1
-        print(collected)
         collect=False
-def chkMove():
-    global rect,currY,currX,move,lastx,lasty
-    for x in range(collected):
-        if move=='up':
-            rect=rect.move(0,-1*HEIGHT)
-            currY-=HEIGHT
-        elif move=='down':
-            rect=rect.move(0,HEIGHT)
-            currY+=HEIGHT
-        elif move=='left':
-            rect=rect.move(-1*HEIGHT,0)
-            currX-=HEIGHT
-        elif move=='right':
-            rect=rect.move(HEIGHT,0)
-            currX+=HEIGHT
-        lastx[x]=currX
-        lasty[x]=currY
-    print(lastx)
-    if -10>rect.top or rect.bottom>515 or -10>rect.left or rect.right>515:
+        collected+=1
+    if -10>currX or currX>1020 or -10>currY or currY>1020:
         pygame.quit()
 def ranBlock():
     global ranx, rany, collect
