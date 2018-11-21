@@ -6,95 +6,87 @@ from collections import OrderedDict
 def main():
     curr_year=2017
     years={}
+    mod_years={}
     z=0
     while z<=25:
         teams={}
         three_loss_teams={}
+        mod_three_loss_teams={}
         changed_year=curr_year-z
-        if changed_year<1994:
-            raiders="Los Angeles Raiders"
-            cardinals="Phoenix Cardinals"
-            end_of_games=223
+        lose_score=[]
+        win_score=[]
+        mod=[]
+        if changed_year<1996:
             wk3_start=26
-            wk3_end=38
-        elif changed_year<1995:
-            rams="Los Angeles Rams"
-            wk3_start=26
-            wk3_end=42
-        elif changed_year<1996:
-            end_of_games=239
-            wk3_start=26
-            wk3_end=45
-        elif changed_year<1997:
-            texans="Houston Oilers"
+            wk3_end=40
         elif changed_year<1999:
-            titans="Tennessee Oilers"
-            wk3_start=28
+            wk3_start=29
             wk3_end=43
-        elif changed_year<2000:
-            end_of_games=247
-        elif changed_year<2016:
-            rams="St. Louis Rams"
-        elif changed_year<2017:
-            chargers="San Diego Chargers"
         else:
-            chargers="Los Angeles Chargers"
-            titans="Tennessee Titans"
-            texans="Houston Texans"
-            rams="Los Angeles Rams"
-            raiders="Oakland Raiders"
-            cardinals="Arizona Cardinals"
             wk3_start=30
             wk3_end=46
-            end_of_games=256
-        teams={"Philadelphia Eagles":0, "Atlanta Falcons":0,"Cincinnati Bengals":0,"Indianapolis Colts":0,"Baltimore Ravens":0,"Buffalo Bills":0,"Tampa Bay Buccaneers":0,"New Orleans Saints":0,"Pittsburgh Steelers":0,"Cleveland Browns":0,"New England Patriots":0,texans:0,"Miami Dolphins":0,titans:0,"Minnesota Vikings":0,"San Francisco 49ers":0,"Jacksonville Jaguars":0,"New York Giants":0,"Kansas City Chiefs":0,chargers:0,"Washington Redskins":0,cardinals:0,"Denver Broncos":0,"Seattle Seahawks":0,"Carolina Panthers":0,"Dallas Cowboys":0,"Green Bay Packers":0,"Chicago Bears":0,"New York Jets":0,"Detroit Lions":0,rams:0,raiders:0}
+        teams={}
+        mod_teams={}
         link="https://www.pro-football-reference.com/years/"+str(changed_year)+"/games.htm"
         page=requests.get(link)
         soup=BeautifulSoup(page.content,"html5lib")
-        losers=soup.find_all("td",class_="left")
+        losers=soup.find_all("td",attrs={"data-stat":"loser"})
         x=0
         y=0
-        for td in losers:
+        loser_points=soup.find_all("td",attrs={"data-stat":"pts_lose"})
+        winner_points=soup.find_all("td",attrs={"data-stat":"pts_win"})
+        for score in loser_points:
+            if x<len(loser_points)-12:
+                lose_score.append(int(score.string))
             x+=1
-            if x%4==0 and x/4<end_of_games:
-                y+=1
+        x=0
+        for score in winner_points:
+            if x<len(loser_points)-12:
+                win_score.append(int(score.string))
+            x+=1
+        x=0
+        for score in win_score:
+            mod.append(win_score[x]-lose_score[x])
+            x+=1
+        x=0
+        for td in losers:
+            if x<len(losers)-12:
                 if td.string in teams:
                     teams[td.string]+=1
-                if x>wk3_start*4 and x<wk3_end*4 and teams[td.string]==3:
-                    three_loss_teams[td.string]=3
+                    if x<wk3_start:
+                        mod_teams[td.string]+=mod[x]
+                    elif x<wk3_end:
+                        mod_teams[td.string]+=mod[x]
+                    if teams[td.string]==3 and x<wk3_end:
+                        three_loss_teams[td.string]=1
+                        mod_three_loss_teams.update({td.string:round(float(mod_teams[td.string])/3,2)})
+                else:
+                    teams.update({td.string:1})
+                    mod_teams.update({td.string:mod[x]})
+            x+=1
         for team in three_loss_teams:
             if team in teams:
                 three_loss_teams[team]=teams[team]
         years.update({changed_year:three_loss_teams})
+        mod_years.update({changed_year:mod_three_loss_teams})
         z+=1
-    plot(years)
+
+    plot(years,mod_years)
     
     
-def plot(years):
-    plt.title("Teams Records after starting 0-3 (1992-2017)")
-    plt.xlabel("Record")
-    
-    record=[]
-    loss_dict={}
+def plot(years,mod_years):
+    str_record=[]
+    x=16
     for year in years:
         for team in years[year]:
-            if years[year][team] in loss_dict:
-                loss_dict[years[year][team]]+=1
-            else:
-                loss_dict[years[year][team]]=1
-                record.append(years[year][team])
-    record=sorted(record, reverse=True)
-    str_record=[]
-    for x in record:
-        str_record.append(str(16-x)+"-"+str(x))
-    od_loss_dict=OrderedDict(sorted(loss_dict.items(),reverse=True))
-    num_time=[]
-    for key, value in od_loss_dict.items():
-        num_time.append(value)
-    plt.ylabel("# of Teams (Total: "+str(sum(num_time))+")")
-    plt.xticks(np.arange(len(record)),str_record)
-    plt.yticks(np.arange(20))
-    plt.bar(np.arange(len(record)),num_time)
+            annotation=team+":"+str(16-years[year][team])+"-"+str(years[year][team])+"("+str(mod_years[year][team])+")"
+            plt.plot(mod_years[year][team],(16-years[year][team]),'bo')
+    while x>=0:
+        str_record.append(str(16-x))
+        x-=1
+    plt.ylabel("Wins")
+    plt.xlabel("Avg. Margin of Defeat Over First 3 Games")
+    plt.yticks(np.arange(17),str_record)
     plt.show()
             
         
