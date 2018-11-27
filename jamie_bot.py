@@ -1,9 +1,12 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import praw
 import config
 import time
 import os
 from bs4 import BeautifulSoup
 import requests
+
 
 
 #Int to limit the amount of comments the bot will search through at a time
@@ -31,7 +34,7 @@ def bot_login():
 #The work of the bot meaning writing the comment and doing the work
 def run_bot(handle, comments_replied_to):
     print "Obtaining comments..."
-    for comment in handle.subreddit('test').stream.comments():
+    for comment in handle.subreddit('mma+joerogan').stream.comments():
         
         if botString in comment.body.lower() and comment.id not in comments_replied_to and comment.author != handle.user.me():
         	#Adds the comment ID to a txt file so it won't repeat comments
@@ -117,7 +120,7 @@ def search_yt(comment):
 
 
 def create_search(comment):
-    comment_body = list(comment.body.split('\"',1)[1].split('\"')[0])
+    comment_body = list(comment.body.split('[',1)[1].split(']')[0])
     x = 0
     for char in comment_body:
         if char == " ":
@@ -135,8 +138,11 @@ def check_search(comment):
 	comment_body=list(comment.body)
 	x = 0
 	for char in comment_body:
-		if char == '\"':
-			x += 1
+            if char == '[':
+                x=1
+            elif char == ']':
+                x=2
+                    
 	if x<2:
 		raise Exception
 	
@@ -159,3 +165,4 @@ comments_replied_to = get_saved_comments()
 
 while True:
     run_bot(handle, comments_replied_to)
+    sleep(30)
